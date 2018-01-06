@@ -26,7 +26,7 @@ using namespace tinyxml2;
 int main() {
 
   XMLDocument doc;
-  doc.LoadFile("../conf/server.xml");
+  doc.LoadFile("conf/server.xml");
   XMLElement* root = doc.RootElement();
   std::string threadnum = root->FirstChildElement("Threads")->Attribute("num");
   std::cout << threadnum << std::endl;
