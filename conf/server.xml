@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<Server>
+  <Threads num="4"></Threads>
+  <Tcp port="9999"></Tcp>
+  <Udp port="19999"></Udp>
+  <Log file="server.log" level="DEBUG"></Log>
+</Server>
