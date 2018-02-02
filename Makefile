@@ -6,7 +6,7 @@ LDFFLAGS = -lev -pthread
 
 PROJ_PATH = $(shell pwd|awk -F '/proxy' '{print $$1}')/proxy
 
-PROJ_SRC_PATH = $(PROJ_PATH)/eventloop
+PROJ_SRC_PATH = $(PROJ_PATH)/src
 
 PROJ_INC_PATH = $(PROJ_PATH)/include
 
