@@ -29,6 +29,7 @@ class Socket {
   // pure io function
   virtual int Read(void* buf, int len) const = 0;
   virtual int Write(const void* buf, int len) const = 0;
+
  protected:
   int sockfd_;
 };
@@ -54,6 +55,9 @@ class TcpSocket : public Socket {
 
   int Read(void* buf, int len) const;
   int Write(const void* buf, int len) const;
+
+  // for deal with http request, len <= MTU
+  int ReadOnce(void* buf, int len) const;
 
   //factory methods
   static TcpSocket CreateTcpSocket();

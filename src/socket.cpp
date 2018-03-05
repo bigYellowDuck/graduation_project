@@ -133,6 +133,11 @@ int TcpSocket::Write(const void* buf, int len) const {
   return nwritten;
 }
 
+int TcpSocket::ReadOnce(void* buf, int len) const {
+  int nread = ::read(sockfd_, static_cast<char*>(buf), len);
+  return nread;
+}
+
 TcpSocket TcpSocket::CreateTcpSocket() {
   int sockfd = ::socket(AF_INET, SOCK_STREAM|SOCK_CLOEXEC, IPPROTO_TCP);
   assert(sockfd > 0);

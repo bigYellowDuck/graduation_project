@@ -15,16 +15,16 @@ Acceptor::Acceptor(const InetAddress& listenaddr, EventLoop* loop)
 }
 
 void Acceptor::HandleRead(struct ev_loop* loop, struct ev_io* watcher, int revents) {
-  int sockfd = ::accept4(watcher->fd, NULL, NULL, SOCK_CLOEXEC);
+  struct sockaddr_in peeraddr;
+  socklen_t addrlen;
+  int sockfd = ::accept4(watcher->fd, (struct sockaddr*)&peeraddr, &addrlen, SOCK_CLOEXEC);
+  InetAddress peeraddress(peeraddr);
   if (sockfd > 0) {
+    info("Acceptor build tcp connection with %s", peeraddress.ToIpPort().data());
     std::unique_ptr<Socket> socket = std::unique_ptr<TcpSocket>(new TcpSocket(sockfd));
     EventLoop* eloop = static_cast<EventLoop*>(ev_userdata(loop));
     EventLoop* l = eloop->GetMultiEventLoop()->GetNextLoop();
-    if (callback_ == NULL) { 
-      l->AddSocket(std::move(socket), EV_READ, Echo);
-    } else {
-      l->AddSocket(std::move(socket), EV_READ, callback_);
-    }
+    l->AddSocket(std::move(socket), EV_READ, callback_);
     l->WakeUp();
   } else {
     error("Acceptor accept socket failed");

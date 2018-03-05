@@ -1,10 +1,14 @@
 #include "server.h"
 #include "util.h"
+#include "http_parser.h"
+#include "event_loop.h"
+#include "socket.h"
+#include "logging.h"
+
 
 #include <iostream>
 #include <stdio.h>
 #include <unistd.h>
-
 
 /*
 static void TimerCallback(struct ev_loop* l, struct ev_timer* watcher, int revents) {
@@ -16,6 +20,19 @@ static void PrintUdpData(std::unique_ptr<char[]>&& data) {
   printf("%d data %s\n", util::GetThreadId(), data.get());
 }
 
+static void PrintTcpData(struct ev_loop* loop, struct ev_io* watcher, int revents) {
+  const TcpSocket *socket = static_cast<const TcpSocket*>(watcher->data);
+  char buf[1024] = {0};
+  int nread = socket->ReadOnce(buf, sizeof(buf));
+  HttpParser parser(buf);
+  std::string body = parser.GetBody();
+  printf("%s\n", body.data());
+  EventLoop* eloop = static_cast<EventLoop*>(ev_userdata(loop));
+  eloop->RemoveSocket(watcher);
+  (void)revents;
+}
+
+
 int main(int argc, char** argv) {
   if (argc != 2) {
     fprintf(stderr, "useage: <%s> <config file path>\n", argv[0]);
@@ -24,6 +41,7 @@ int main(int argc, char** argv) {
 
   Server server(argv[1]);
   server.SetUdpCallback(PrintUdpData);
+  server.SetTcpCallback(PrintTcpData);
   server.Run();
 /*
   Configer configer(argv[1]);
