@@ -5,19 +5,29 @@
 #include "socket.h"
 #include "logging.h"
 
+#include <rapidjson/document.h>
 
-#include <iostream>
 #include <stdio.h>
 #include <unistd.h>
-
-/*
-static void TimerCallback(struct ev_loop* l, struct ev_timer* watcher, int revents) {
-  printf("%u timercallback\n", util::GetThreadId());
-}
-*/
+#include <vector>
 
 static void PrintUdpData(std::unique_ptr<char[]>&& data) {
-  printf("%d data %s\n", util::GetThreadId(), data.get());
+  rapidjson::Document document;
+  if (!document.Parse(data.get()).HasParseError()) {
+    static const std::vector<std::string> params{"sensor_id", "sensor_type", "timestamp", "value"};
+    for (const auto& param : params) {
+      rapidjson::Value::ConstMemberIterator iter = document.FindMember(param.c_str());
+      if (iter != document.MemberEnd()) {
+        // TODO INSERT INTO MYSQL
+        printf("%s\n", iter->value.GetString());
+      } else {
+        error("Json string lack param [%s], discard this json", param.c_str());
+        return;
+      }
+    }
+  } else {
+    error("Receive a error or uncompleted json, discard it");
+  }
 }
 
 static void PrintTcpData(struct ev_loop* loop, struct ev_io* watcher, int revents) {
@@ -43,26 +53,6 @@ int main(int argc, char** argv) {
   server.SetUdpCallback(PrintUdpData);
   server.SetTcpCallback(PrintTcpData);
   server.Run();
-/*
-  Configer configer(argv[1]);
-  
-  setlogfile(configer.LogfileName());
-  setloglevel(configer.Loglevel());
-
-  EventLoop el;
-  MultiEventLoop loop(&el, configer.ThreadNum());
-
-  InetAddress addr(configer.TcpPort());
-  Acceptor acceptor(addr, &el); 
-
-  InetAddress udpaddr(configer.UdpPort());
-  Udpkeeper udpkeeper(udpaddr, &el);
-  Udpkeeper::setReadCallBack(PrintUdpData);
-
-  trace("multiloop start");
-
-  loop.Start();
-*/
 /*
   loop.GetNextLoop()->AddTimerEvent(2, 0, TimerCallback);
 */

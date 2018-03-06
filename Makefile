@@ -8,15 +8,18 @@ PROJ_PATH = $(shell pwd|awk -F '/proxy' '{print $$1}')/proxy
 
 PROJ_SRC_PATH = $(PROJ_PATH)/src
 
-LIBEV_DIR = libev-4.15
-
-LIBEV_SO = libev.so.4.0.0
-
-PROJ_INC_PATH = $(PROJ_PATH)/include/$(LIBEV_DIR)
+PROJ_INC_PATH = $(PROJ_PATH)/include
 
 PROC_LIB_PATH = $(PROJ_PATH)/lib
 
-PROJ_INC = -I$(PROJ_SRC_PATH) -I$(PROJ_INC_PATH)
+LIBEV_PATH = $(PROJ_INC_PATH)/libev-4.15
+LIBEV_INC_PATH = $(LIBEV_PATH)
+LIBEV_SO = libev.so.4.0.0
+
+RAPIDJSON_PATH = $(PROJ_INC_PATH)/rapidjson
+RAPIDJSON_INC_PATH = $(RAPIDJSON_PATH)/include
+
+PROJ_INC = -I$(PROJ_SRC_PATH) -I$(LIBEV_INC_PATH) -I$(RAPIDJSON_INC_PATH)
 
 PROC_LINK = -L$(PROC_LIB_PATH)
 
