@@ -3,9 +3,11 @@
 
 #include <memory>
 
+class DbConnector;
+
 class Server {
   using TcpCallback = void (*)(struct ev_loop*, struct ev_io*, int);
-  using UdpCallback = void (*)(std::unique_ptr<char[]>&&);
+  using UdpCallback = void (*)(std::unique_ptr<char[]>&&, DbConnector&);
 
  public:
   Server();

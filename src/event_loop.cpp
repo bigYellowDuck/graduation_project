@@ -2,6 +2,8 @@
 #include "util.h"
 #include "socket.h"
 #include "logging.h"
+#include "configer.h"
+
 
 #include <string.h>
 #include <unistd.h>
@@ -9,9 +11,14 @@
 EventLoop::UdpCallback EventLoop::udp_callback_ = NULL;
 
 EventLoop::EventLoop()
-   : loop_(ev_loop_new(EVFLAG_AUTO)) {
+  : loop_(ev_loop_new(EVFLAG_AUTO)),
+    db_connector_() {
   wakeup_watcher_ = AddIoEvent(util::CreateEventFd(), EV_READ, AwakeAndHandleEvents);
   ev_set_userdata(loop_, this);
+  db_connector_.Connect(Configer::Instance().DbHost(),
+                        Configer::Instance().DbUser(),
+                        Configer::Instance().DbPassword(),
+                        Configer::Instance().DbName());
 }
 
 EventLoop::~EventLoop() {
@@ -112,7 +119,7 @@ void EventLoop::AwakeAndHandleEvents(struct ev_loop* loop, struct ev_io* watcher
     std::unique_ptr<char[]> data;
     queue.pop(&data);
     trace("udp datagram: %s", data.get());
-    udp_callback_(std::move(data));
+    udp_callback_(std::move(data), eloop->db_connector_);
   }
 }
 

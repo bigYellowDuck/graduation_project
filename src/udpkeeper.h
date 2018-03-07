@@ -3,11 +3,12 @@
 
 #include "inet_address.h"
 #include "socket.h"
+#include "db_connector.h"
 
 class EventLoop;
 
 class Udpkeeper {
-  using Callback = void (*)(std::unique_ptr<char[]>&&);
+  using Callback = void (*)(std::unique_ptr<char[]>&&, DbConnector&);
  public:
   Udpkeeper(const InetAddress& udpaddr, EventLoop* loop);
   ~Udpkeeper() = default;

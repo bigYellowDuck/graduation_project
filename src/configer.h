@@ -17,6 +17,11 @@ class Configer {
   int UdpPort() const;
   const std::string LogfileName() const;
   const std::string Loglevel() const;
+  
+  const std::string DbHost() const;
+  const std::string DbUser() const;
+  const std::string DbPassword() const;
+  const std::string DbName() const;
 
   static Configer& Instance();
 
@@ -24,10 +29,17 @@ class Configer {
   Configer() = default;
 
   std::string thread_num_;
+  
   std::string tcp_port_;
   std::string udp_port_;
+  
   std::string logfile_name_;
   std::string loglevel_;
+  
+  std::string db_host_;
+  std::string db_user_;
+  std::string db_password_;
+  std::string db_name_;
 
   static Configer instance_;
 };

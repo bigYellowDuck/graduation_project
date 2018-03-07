@@ -3,6 +3,7 @@
 
 #include "threads.h"
 #include "blocking_queue.h"
+#include "db_connector.h"
 
 #include <ev.h>
 #include <vector>
@@ -14,7 +15,7 @@ class MultiEventLoop;
 class EventLoop {
   using IoEventCallback = void (*)(struct ev_loop*, struct ev_io*, int);
   using TimerEventCallback = void(*)(struct ev_loop*, struct ev_timer*, int);
-  using UdpCallback = void(*)(std::unique_ptr<char[]>&&);
+  using UdpCallback = void(*)(std::unique_ptr<char[]>&&, DbConnector&);
  public:
   explicit EventLoop();
   ~EventLoop();
@@ -52,7 +53,8 @@ class EventLoop {
   std::map<int, std::unique_ptr<Socket>> sockfds_;
   MultiEventLoop* mloop_;
   BlockingQueue<std::unique_ptr<char[]>> udpdata_queue_;
-  
+  DbConnector db_connector_;
+
   static UdpCallback udp_callback_;
 
   static void AwakeAndHandleEvents(struct ev_loop* loop, struct ev_io*, int revents);

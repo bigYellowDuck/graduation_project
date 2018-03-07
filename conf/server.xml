@@ -4,4 +4,5 @@
   <Tcp port="9999"></Tcp>
   <Udp port="19999"></Udp>
   <Log file="server.log" level="TRACE"></Log>
+  <Db host="127.0.0.1" user="zfx" password="951226" dbname="gradation_project"></Db>
 </Server>

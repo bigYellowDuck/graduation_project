@@ -23,6 +23,11 @@ void Configer::init(const std::string& conf_path) {
   loglevel_ = root->FirstChildElement("Log")->Attribute("level");
   setlogfile(logfile_name_);
   setloglevel(loglevel_);
+
+  db_host_ = root->FirstChildElement("Db")->Attribute("host");
+  db_user_ = root->FirstChildElement("Db")->Attribute("user");
+  db_password_ = root->FirstChildElement("Db")->Attribute("password");
+  db_name_ = root->FirstChildElement("Db")->Attribute("dbname");
 }
 
 int Configer::ThreadNum() const {
@@ -45,3 +50,18 @@ const std::string Configer::Loglevel() const {
   return loglevel_;
 }
 
+const std::string Configer::DbHost() const {
+  return db_host_;
+}
+
+const std::string Configer::DbUser() const {
+  return db_user_;
+}
+
+const std::string Configer::DbPassword() const {
+  return db_password_;
+}
+
+const std::string Configer::DbName() const {
+  return db_name_;
+}
