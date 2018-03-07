@@ -6,7 +6,13 @@
 
 using namespace tinyxml2;
 
-Configer::Configer(const std::string& conf_path) {
+Configer Configer::instance_;
+
+Configer& Configer::Instance() {
+  return instance_;
+}
+
+void Configer::init(const std::string& conf_path) {
   XMLDocument doc;
   doc.LoadFile(conf_path.data());
   XMLElement* root = doc.RootElement();

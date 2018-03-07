@@ -1,8 +1,6 @@
 #ifndef SERVER_H_
 #define SERVER_H_
 
-#include "configer.h"
-
 #include <memory>
 
 class Server {
@@ -10,7 +8,7 @@ class Server {
   using UdpCallback = void (*)(std::unique_ptr<char[]>&&);
 
  public:
-  Server(const std::string& conf_path);
+  Server();
   ~Server();
 
   Server(const Server&) = delete;
