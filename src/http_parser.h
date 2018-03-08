@@ -8,8 +8,11 @@ class HttpParser {
   HttpParser(const char* data);
   ~HttpParser();
 
-  std::string GetBody();
+  HttpParser(const HttpParser&) = delete;
+  HttpParser& operator=(const HttpParser&) = delete;
 
+  std::string GetBody();
+  std::string GetRequestParam();
  private:
   const char* data_;
 };

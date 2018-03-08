@@ -2,6 +2,7 @@
 #define DB_CONNECTOR_H
 
 #include <mysql/mysql.h>
+#include <vector>
 #include <string>
 
 using std::string;
@@ -17,6 +18,7 @@ class DbConnector {
   bool Connect(const string& host, const string& user, const string& password, const string& dbname);
 
   bool ExecInsertSql(const string& sql);
+  std::vector<std::vector<std::string>> ExecSelectSql(const string& sql);
 
   unsigned long long GetNumOfRows() const {
     return rows_;

@@ -33,12 +33,11 @@ bool DbConnector::ExecInsertSql(const string& sql) {
   return true;
 }
 
-/*
-bool DbConnector::ExecInsertSql(const string& sql) {
+std::vector<std::vector<std::string>> DbConnector::ExecSelectSql(const string& sql) {
   int ret = mysql_query(connection_, sql.c_str());
   if (ret != 0) {
     error("Exec insert sql %s failed", sql.c_str());
-    return false;
+    return std::vector<std::vector<std::string>>();
   }
 
   MYSQL_RES* result = mysql_store_result(connection_);
@@ -46,10 +45,27 @@ bool DbConnector::ExecInsertSql(const string& sql) {
     fatal("DbConnector mysql_store_result return null");
   }
 
-  rows_ = static_cast<unsigned long long>(mysql_affected_rows(result)); 
+  rows_ = static_cast<unsigned long long>(mysql_num_rows(result)); 
+  unsigned int columns = mysql_num_fields(result);
+
+  MYSQL_ROW row;
+  std::vector<std::vector<std::string>> query_res;
+
+  if (rows_ > 0) {
+     while ((row = mysql_fetch_row(result)) != NULL) {
+      std::vector<std::string> str_row;
+      for (unsigned int i=0; i<columns; ++i) {
+        char value[256];
+        sprintf(value, "%s", row[i]);
+        std::string str(value);
+        str_row.push_back(str);
+      }
+      query_res.push_back(str_row);
+    }
+  }
 
   mysql_free_result(result);
 
-  return true;
+  return query_res;
 }
-*/
+

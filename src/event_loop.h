@@ -46,6 +46,10 @@ class EventLoop {
     return udpdata_queue_;
   }
 
+  DbConnector& GetDbConnector() {
+    return db_connector_;
+  }
+
   static void SetHandleUdpCallbak(UdpCallback callback) { udp_callback_ = callback; }
  private:
   struct ev_loop* loop_;
