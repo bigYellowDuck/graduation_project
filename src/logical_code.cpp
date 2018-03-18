@@ -72,7 +72,7 @@ void LogicalCode::TcpLogicFunction(struct ev_loop* loop, struct ev_io* watcher, 
     // TODO response the value
     // printf("%s\n", select_res[0][0].c_str());
     char data[1024] = {0};
-    sprintf(data, "HTTP/1.1 200 OK\r\nContent-Type:text/plain\r\n\r\n%s\r\n", 
+    sprintf(data, "HTTP/1.1 200 OK\r\nContent-Type:text/plain\r\nAccess-Control-Allow-Origin:*\r\n\r\n%s\r\n", 
             select_res[0][0].c_str());
 
     socket->Write(data, strlen(data));
