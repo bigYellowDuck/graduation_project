@@ -19,7 +19,8 @@ LIBEV_LINK = -L$(PROJ_LIB_PATH) -lev
 RAPIDJSON_PATH = $(PROJ_INC_PATH)/rapidjson
 RAPIDJSON_INC_PATH = $(RAPIDJSON_PATH)/include
 
-MYSQL_LINK = -L/usr/lib/x86_64-linux-gnu -lmysqlclient
+# MYSQL_LINK = -L/usr/lib/x86_64-linux-gnu -lmysqlclient
+MYSQL_LINK = $(shell mysql_config --libs)
 
 PROJ_INC = -I$(PROJ_SRC_PATH) -I$(LIBEV_INC_PATH) -I$(RAPIDJSON_INC_PATH)
 
